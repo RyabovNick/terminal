@@ -41,7 +41,7 @@
         let newVideo = document.createElement('video')
         //Loop
         if (id + 1 == links.length) {
-            newVideo.setAttribute('onended', 'nextVideo(0)')
+            newVideo.setAttribute('onended', 'getVideos()')
         } else {
             newVideo.setAttribute('onended', `nextVideo(${id + 1})`)
         }
@@ -66,6 +66,8 @@
         xhr.onreadystatechange = function() {
             console.log('state: ' + this.readyState + ' status: ' + this.status)
             if (this.readyState == 4 && this.status == 200) {
+                links = []
+
                 var arr = JSON.parse(this.responseText)
 
                 arr.forEach(element => {

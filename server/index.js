@@ -80,6 +80,7 @@ app.post('/api/upload_videos', function(req, res, next) {
         allFiles = []
 
     form.uploadDir = '../html/files'
+    //form.uploadDir = './files'
     form.keepExtensions = true
     form.multiples = true
 
@@ -111,9 +112,10 @@ app.post('/api/upload_videos', function(req, res, next) {
                     //console.log('fields.dateTo: ', fields.dateTo)
                     console.log('el.file.name: ', el.file.name)
                     console.log('el.file.path: ', el.file.path)
+                    //в ссылке лишнее (../html/) поэтому substr(8)
                     con.query(
                         'Insert into `files` (name,link, type) values (?,?,0)',
-                        [el.file.name, el.file.path],
+                        [el.file.name, el.file.path.substr(8)],
                         function(error, result) {
                             if (error) return res.status(406).send(error)
                             console.log(result)
