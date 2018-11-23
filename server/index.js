@@ -25,13 +25,13 @@ app.use(bodyParser.json())
     next(err)
 })*/
 
-app.get('/api/getVideos', function(req, res, next) {
+app.get('/api/getFiles', function(req, res, next) {
     pool.getConnection(function(err, connection) {
         if (err) throw err
 
         console.log(req.body)
 
-        connection.query('Select * from videos', function(error, result) {
+        connection.query('Select * from files', function(error, result) {
             if (error) throw error
             console.log(result)
             res.send(result)
@@ -79,7 +79,7 @@ app.post('/api/upload_videos', function(req, res, next) {
         fields = {},
         allFiles = []
 
-    form.uploadDir = './files'
+    form.uploadDir = '../html/files'
     form.keepExtensions = true
     form.multiples = true
 
@@ -107,13 +107,13 @@ app.post('/api/upload_videos', function(req, res, next) {
 				});
 				*/
                 allFiles.forEach(function(el) {
-                    console.log('fields.dateFrom: ', fields.dateFrom)
-                    console.log('fields.dateTo: ', fields.dateTo)
+                    //console.log('fields.dateFrom: ', fields.dateFrom)
+                    //console.log('fields.dateTo: ', fields.dateTo)
                     console.log('el.file.name: ', el.file.name)
                     console.log('el.file.path: ', el.file.path)
                     con.query(
-                        'Insert into `videos` (name,date_from,date_to,file) values (?,?,?,?)',
-                        [el.file.name, fields.dateFrom, fields.dateTo, el.file.path],
+                        'Insert into `files` (name,link, type) values (?,?,0)',
+                        [el.file.name, el.file.path],
                         function(error, result) {
                             if (error) return res.status(406).send(error)
                             console.log(result)

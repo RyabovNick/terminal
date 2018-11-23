@@ -6,11 +6,13 @@
         <title>Page Title</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
     </head>
-    <body>
-        <video onended="nextVideo()" id="video" width="100%" height="100%" autoplay>
-            <source id="source" src="https://unidb.ru/files/2.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-        </video>
+    <body onload="getVideos()">
+        <!--
+            <video onended="nextVideo()" id="video" width="100%" height="100%" autoplay>
+                <source id="source" src="https://unidb.ru/files/2.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+            </video>
+        -->
     </body>
 </html>
 
@@ -25,12 +27,24 @@
 </style>
 
 <script>
-    function nextVideo() {
-        let el = document.getElementById('video')
-        el.parentNode.removeChild(el)
+    var links = []
+    var firstRun = true
+
+    function nextVideo(id) {
+        if (!firstRun) {
+            let el = document.getElementById('video')
+            el.parentNode.removeChild(el)
+        }
+
+        firstRun = false
 
         let newVideo = document.createElement('video')
-        newVideo.setAttribute('onended', 'nextVideo()')
+        //Loop
+        if (id + 1 == links.length) {
+            newVideo.setAttribute('onended', 'nextVideo(0)')
+        } else {
+            newVideo.setAttribute('onended', `nextVideo(${id + 1})`)
+        }
         newVideo.setAttribute('id', 'video')
         newVideo.setAttribute('width', '100%')
         newVideo.setAttribute('height', '100%')
@@ -38,15 +52,32 @@
 
         let newSource = document.createElement('source')
         newSource.setAttribute('id', 'source')
-        newSource.setAttribute('src', 'https://unidb.ru/files/3.mp4')
+        newSource.setAttribute('src', `https://unidb.ru/${links[id]}`)
         newSource.setAttribute('type', 'video/mp4')
 
         newVideo.appendChild(newSource)
 
         let body = document.getElementsByTagName('body')[0]
         body.appendChild(newVideo)
+    }
 
-        let el1 = document.getElementById('video')
-        el1.requestFullscreen()
+    function getVideos() {
+        let xhr = new XMLHttpRequest()
+        xhr.onreadystatechange = function() {
+            console.log('state: ' + this.readyState + ' status: ' + this.status)
+            if (this.readyState == 4 && this.status == 200) {
+                var arr = JSON.parse(this.responseText)
+
+                arr.forEach(element => {
+                    links.push(element.link)
+                })
+
+                console.log(links)
+                nextVideo(0)
+            }
+        }
+
+        xhr.open('GET', 'http://localhost:3000/api/getFiles', true)
+        xhr.send()
     }
 </script>
