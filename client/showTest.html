@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>Page Title</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+    </head>
+    <body>
+        <video onended="nextVideo()" id="video" width="100%" height="100%" autoplay>
+            <source id="source" src="https://unidb.ru/files/2.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+        </video>
+    </body>
+</html>
+
+<style>
+    body {
+        margin: 0;
+    }
+
+    html {
+        overflow: hidden;
+    }
+</style>
+
+<script>
+    function nextVideo() {
+        let el = document.getElementById('video')
+        el.parentNode.removeChild(el)
+
+        let newVideo = document.createElement('video')
+        newVideo.setAttribute('onended', 'nextVideo()')
+        newVideo.setAttribute('id', 'video')
+        newVideo.setAttribute('width', '100%')
+        newVideo.setAttribute('height', '100%')
+        newVideo.setAttribute('autoplay', '')
+
+        let newSource = document.createElement('source')
+        newSource.setAttribute('id', 'source')
+        newSource.setAttribute('src', 'https://unidb.ru/files/3.mp4')
+        newSource.setAttribute('type', 'video/mp4')
+
+        newVideo.appendChild(newSource)
+
+        let body = document.getElementsByTagName('body')[0]
+        body.appendChild(newVideo)
+
+        let el1 = document.getElementById('video')
+        el1.requestFullscreen()
+    }
+</script>
