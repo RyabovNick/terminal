@@ -27,15 +27,15 @@ function loop() {
                         idx = 0
                     }
                 }
-                setInterval(showImage, 3 * 1000)
+                setInterval(showImage, 30 * 1000)
 
-                showImage()
+                //showImage()
             }
         }
         xhr.open('GET', 'http://localhost:3000/api/getVideos', true)
         xhr.send()
     }
-    setInterval(checker, 20 * 1000)
+    setInterval(checker, 60 * 1000)
 
     checker()
 }
