@@ -24,13 +24,13 @@ app.use(bodyParser.json())
     next(err)
 })*/
 
-app.get('/api/getFiles', function(req, res, next) {
+app.get('/api/getVideos', function(req, res, next) {
     pool.getConnection(function(err, connection) {
         if (err) throw err
 
         console.log(req.body)
 
-        connection.query('Select * from files', function(error, result) {
+        connection.query('Select * from videos', function(error, result) {
             if (error) throw error
             console.log(result)
             res.send(result)
@@ -38,17 +38,20 @@ app.get('/api/getFiles', function(req, res, next) {
     })
 })
 
-app.get('/api/getVideos', function(req, res, next) {
+app.get('/api/getPictures', function(req, res, next) {
     pool.getConnection(function(err, connection) {
         if (err) throw err
 
         console.log(req.body)
 
-        connection.query('Select * from pictures', function(error, result) {
-            if (error) throw error
-            console.log(result)
-            res.send(result)
-        })
+        connection.query(
+            'Select * from pictures where date_start < now() and date_finish > now()',
+            function(error, result) {
+                if (error) throw error
+                console.log(result)
+                res.send(result)
+            }
+        )
     })
 })
 
@@ -113,7 +116,7 @@ app.post('/api/upload_videos', function(req, res, next) {
                     console.log('el.file.path: ', el.file.path)
                     //в ссылке лишнее (../html/) поэтому substr(8)
                     con.query(
-                        'Insert into `files` (name,link, type) values (?,?,0)',
+                        'Insert into `videos` (name,link) values (?,?)',
                         [el.file.name, el.file.path.substr(8)],
                         function(error, result) {
                             if (error) return res.status(406).send(error)
