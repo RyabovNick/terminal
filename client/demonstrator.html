@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            body,
+            html {
+                height: 100%;
+                background: black;
+            }
+            body {
+                margin: 0;
+            }
+
+            html {
+                overflow: hidden;
+            }
+        </style>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>Terminal</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+    </head>
+    <body onload="getMedia()"></body>
+</html>
+
+<script>
+    var media = {}
+    var links = []
+    var firstRun = true
+
+    function getMedia() {
+        //удалить лишние элементы
+        if (document.contains(document.getElementById('video'))) {
+            document.getElementById('video').remove()
+        }
+
+        if (document.contains(document.getElementById('img'))) {
+            document.getElementById('img').remove()
+        }
+
+        let xhr = new XMLHttpRequest()
+        xhr.onreadystatechange = function() {
+            console.log('state: ' + this.readyState + ' status: ' + this.status)
+            if (this.readyState == 4 && this.status == 200) {
+                media = JSON.parse(this.responseText)
+                console.log('media: ', media)
+                console.log('media: ', media.length)
+
+                if (media.length > 0) {
+                    nextPictures(0)
+                } else {
+                    getVideos()
+                }
+            }
+        }
+        //local
+        //xhr.open('GET', 'http://localhost:3000/api/getFiles', true)
+        xhr.open('GET', 'https://unidb.ru:8446/api/getPictures', true)
+        xhr.send()
+    }
+
+    function nextPictures(id) {
+        var len = media.length
+
+        console.log('showImage: ' + Date(Date.now()))
+
+        var entry = media[id]
+        console.log('entry: ', entry)
+
+        var body = document.getElementsByTagName('body')[0]
+
+        var img = document.createElement('img')
+        img.src = `https://unidb.ru/${entry.link}`
+        img.id = 'img'
+        img.setAttribute('width', '100%')
+        img.setAttribute('height', '100%')
+        body.appendChild(img)
+
+        //ждём заданное количество времени
+        setTimeout(function() {
+            console.log('timeout')
+            id++
+
+            document.getElementById('img').remove()
+
+            if (id >= len) {
+                getMedia()
+            } else {
+                nextPictures(id)
+            }
+        }, 1000 * entry.amount_time)
+    }
+
+    function getVideos() {
+        let xhr = new XMLHttpRequest()
+        xhr.onreadystatechange = function() {
+            console.log('state: ' + this.readyState + ' status: ' + this.status)
+            if (this.readyState == 4 && this.status == 200) {
+                links = []
+
+                media = JSON.parse(this.responseText)
+
+                media.forEach(element => {
+                    links.push(element.link)
+                })
+
+                console.log(links)
+                nextVideo(0)
+            }
+        }
+        //local
+        //xhr.open('GET', 'http://localhost:3000/api/getFiles', true)
+        xhr.open('GET', 'https://unidb.ru:8446/api/getVideos', true)
+        xhr.send()
+    }
+
+    function nextVideo(id) {
+        // if (!firstRun) {
+        //     let el = document.getElementById('video')
+        //     el.parentNode.removeChild(el)
+        // }
+
+        if (document.contains(document.getElementById('video'))) {
+            document.getElementById('video').remove()
+        }
+
+        firstRun = false
+
+        let newVideo = document.createElement('video')
+        //Если последнее видео - отправляем запрос, иначе следующее
+        if (id + 1 == links.length) {
+            newVideo.setAttribute('onended', 'getMedia()')
+        } else {
+            newVideo.setAttribute('onended', `nextVideo(${id + 1})`)
+        }
+        newVideo.setAttribute('id', 'video')
+        newVideo.setAttribute('width', '100%')
+        newVideo.setAttribute('height', '100%')
+        newVideo.muted = true
+        newVideo.setAttribute('autoplay', '')
+
+        let newSource = document.createElement('source')
+        newSource.setAttribute('id', 'source')
+        newSource.setAttribute('src', `https://unidb.ru/${links[id]}`)
+        newSource.setAttribute('type', 'video/mp4')
+
+        newVideo.appendChild(newSource)
+
+        let body = document.getElementsByTagName('body')[0]
+        body.appendChild(newVideo)
+
+        //TODO: видимо из-за апрельских изменений видео может не всегда
+        //сразу начинать проигрываться. В EDGE такая проблема не замечена
+        //либо его, либо оставлять край мышки на экране, либо в
+        //настройках хрома ковыряться
+        //вроде как muted решает проблему, но надо проследить
+        //newVideo.play()
+    }
+</script>

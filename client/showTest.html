@@ -17,6 +17,10 @@
 </html>
 
 <style>
+    body,
+    html {
+        height: 100%;
+    }
     body {
         margin: 0;
     }
@@ -48,6 +52,7 @@
         newVideo.setAttribute('id', 'video')
         newVideo.setAttribute('width', '100%')
         newVideo.setAttribute('height', '100%')
+        newVideo.muted = true
         newVideo.setAttribute('autoplay', '')
 
         let newSource = document.createElement('source')
@@ -59,6 +64,8 @@
 
         let body = document.getElementsByTagName('body')[0]
         body.appendChild(newVideo)
+
+        //newVideo.play()
     }
 
     function getVideos() {
