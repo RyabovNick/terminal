@@ -35,6 +35,7 @@ app.get('/api/getVideos', function(req, res, next) {
             console.log(result)
             res.send(result)
         })
+        connection.release()
     })
 })
 
@@ -52,6 +53,8 @@ app.get('/api/getPictures', function(req, res, next) {
                 res.send(result)
             }
         )
+
+        connection.release()
     })
 })
 
