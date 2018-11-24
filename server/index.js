@@ -3,19 +3,18 @@ var express = require('express'),
     pool = require('./config/config'),
     formidable = require('formidable'),
     //for https and cors
-    //cors = require('cors'),
+    cors = require('cors'),
     https = require('https'),
     fs = require('fs')
-/* get .key and .cert to https
-    var sslOptions = {
-        key: fs.readFileSync('key.key'),
-        cert: fs.readFileSync('cert.crt')
-    }
-*/
+// get .key and .cert to https
+var sslOptions = {
+    key: fs.readFileSync('key.key'),
+    cert: fs.readFileSync('cert.crt')
+}
 
 var app = express()
 
-//app.use(cors())
+app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
@@ -131,8 +130,10 @@ app.post('/api/upload_videos', function(req, res, next) {
 })
 
 // change server = app..... to this if https needed
-//https.createServer(sslOptions, app).listen(8444);
-// finally, let's start our server...
-var server = app.listen(process.env.PORT || 3000, function() {
-    console.log('Listening on port ' + server.address().port)
+https.createServer(sslOptions, app).listen(8446, function() {
+    console.log('Listening on port 8446')
 })
+// finally, let's start our server...
+// var server = app.listen(process.env.PORT || 3000, function() {
+//     console.log('Listening on port ' + server.address().port)
+// })
