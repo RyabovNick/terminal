@@ -78,8 +78,9 @@
                 nextVideo(0)
             }
         }
-
-        xhr.open('GET', 'http://localhost:3000/api/getFiles', true)
+        //local
+        //xhr.open('GET', 'http://localhost:3000/api/getFiles', true)
+        xhr.open('GET', 'http://unidb.ru:3002/api/getFiles', true)
         xhr.send()
     }
 </script>
