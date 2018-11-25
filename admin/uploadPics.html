@@ -89,6 +89,7 @@
         document.getElementsByName('date_start')[0].value = getDate(date)
         date.setDate(date.getDate() + 30)
         document.getElementsByName('date_finish')[0].value = getDate(date)
+        getAllFiles()
     }
 
     function getDate(dateNow) {
@@ -100,6 +101,23 @@
 
         return `${yyyy}-${MM}-${dd}T${HH}:${mm}`
         //return `${dd}.${MM}.${yyyy} ${HH}:${mm}`
+    }
+
+    function getAllFiles() {
+        var xhrGet = new XMLHttpRequest()
+        xhrGet.open('GET', 'https://unidb.ru:8446/api/getVideos', true)
+
+        xhrGet.onreadystatechange = () => {
+            if (xhrGet.readyState == 4 && xhrGet.status == 200) {
+                showFiles(xhrGet.responseText)
+            }
+        }
+
+        xhrGet.send()
+    }
+
+    function showFiles(response) {
+        var pictures = JSON.parse(response)
     }
 
     //TODO: удаление файлов

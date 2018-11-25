@@ -58,6 +58,22 @@ app.get('/api/getPictures', function(req, res, next) {
     })
 })
 
+app.get('/api/pictures', function(req, res, next) {
+    pool.getConnection(function(err, connection) {
+        if (err) throw err
+
+        console.log(req.body)
+
+        connection.query('Select * from pictures', function(error, result) {
+            if (error) throw error
+            console.log(result)
+            res.send(result)
+        })
+
+        connection.release()
+    })
+})
+
 /**
  * upload html page
  */
@@ -197,6 +213,26 @@ app.post('/api/upload_pictures', function(req, res, next) {
             res.writeHead(200, { 'content-type': 'text/plain' })
             res.end()
         })
+})
+
+//delete files
+app.delete('/api/:table/:id', function(req, res, next) {
+    var table = req.params.table
+    var id = req.params.id
+
+    pool.getConnection(function(err, connection) {
+        if (err) throw err
+
+        console.log(req.body)
+
+        connection.query('Delete from ?? where id = ?', [table, id], function(error, result) {
+            if (error) throw error
+            console.log(result)
+            res.send(result)
+        })
+
+        connection.release()
+    })
 })
 
 // change server = app..... to this if https needed
