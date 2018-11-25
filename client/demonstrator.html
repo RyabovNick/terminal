@@ -49,17 +49,19 @@
 
         let xhr = new XMLHttpRequest()
         xhr.onreadystatechange = function() {
-            console.log('state: ' + this.readyState + ' status: ' + this.status)
             if (this.readyState == 4 && this.status == 200) {
                 media = JSON.parse(this.responseText)
-                console.log('media: ', media)
-                console.log('media: ', media.length)
 
                 if (media.length > 0) {
                     nextPictures(0)
                 } else {
                     getVideos()
                 }
+            } else if (this.readyState == 4 && this.status == 0) {
+                setTimeout(function() {
+                    console.log('try connect again')
+                    getMedia()
+                }, 30 * 1000)
             }
         }
         //local
@@ -69,14 +71,8 @@
     }
 
     function nextPictures(id) {
-        //TODO: переворачивает изображения по ширине
         var len = media.length
-
-        console.log('showImage: ' + Date(Date.now()))
-
         var entry = media[id]
-        console.log('entry: ', entry)
-
         var body = document.getElementsByTagName('body')[0]
 
         var img = document.createElement('img')
@@ -88,7 +84,6 @@
 
         //ждём заданное количество времени
         setTimeout(function() {
-            console.log('timeout')
             id++
 
             document.getElementById('img').remove()
@@ -104,7 +99,6 @@
     function getVideos() {
         let xhr = new XMLHttpRequest()
         xhr.onreadystatechange = function() {
-            console.log('state: ' + this.readyState + ' status: ' + this.status)
             if (this.readyState == 4 && this.status == 200) {
                 links = []
 
@@ -114,17 +108,20 @@
                     links.push(element.link)
                 })
 
-                console.log(links)
                 //Проверяем, если нет ни изображений, ни видео - ждём 30 секунд
                 //и пробуем снова
                 if (media.length > 0) {
                     nextVideo(0)
                 } else {
                     setTimeout(function() {
-                        console.log('timeout')
                         getMedia()
                     }, 30 * 1000)
                 }
+            } else if (this.readyState == 4 && this.status == 0) {
+                setTimeout(function() {
+                    console.log('try connect again')
+                    getMedia()
+                }, 30 * 1000)
             }
         }
         //local
@@ -134,11 +131,6 @@
     }
 
     function nextVideo(id) {
-        // if (!firstRun) {
-        //     let el = document.getElementById('video')
-        //     el.parentNode.removeChild(el)
-        // }
-
         if (document.contains(document.getElementById('video'))) {
             document.getElementById('video').remove()
         }
