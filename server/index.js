@@ -64,11 +64,14 @@ app.get('/api/pictures', function(req, res, next) {
 
         console.log(req.body)
 
-        connection.query('Select * from pictures order by id desc', function(error, result) {
-            if (error) throw error
-            console.log(result)
-            res.send(result)
-        })
+        connection.query(
+            'Select * from pictures where date_finish > now() order by id desc',
+            function(error, result) {
+                if (error) throw error
+                console.log(result)
+                res.send(result)
+            }
+        )
 
         connection.release()
     })

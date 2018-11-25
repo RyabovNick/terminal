@@ -11,7 +11,7 @@
         <p>Допустимый формат: изображения.</p>
         <p>Загрузка начнётся автоматически, после выбора файла</p>
         <p>
-            Показ изображений начнётся автоматически примерно в заданное время, в зависимости от
+            Показ изображений начнётся автоматически, примерно в заданное время, в зависимости от
             очереди показа в этот момент.
         </p>
         <label>Время начала показа: </label>
@@ -23,7 +23,16 @@
         <input type="file" name="afile" id="afile" accept="image/*" /> <br />
         <label>Состояние: </label> <progress id="progress" value="0" max="100"> </progress>
         <label id="isEnd"></label>
-        <div id="listPictures"></div>
+        <!-- <div id="listPictures"></div> -->
+
+        <table id="listPictures">
+            <tr>
+                <th>Имя файла</th>
+                <th>Время начала</th>
+                <th>Время окончания</th>
+                <th></th>
+            </tr>
+        </table>
     </body>
 </html>
 
@@ -51,6 +60,28 @@
     p {
         margin-bottom: 2px;
         margin-top: 2px;
+    }
+
+    #listPictures {
+        margin-top: 35px;
+        width: 100%;
+        max-width: 750px;
+    }
+
+    table {
+        border-collapse: collapse;
+    }
+
+    table,
+    th,
+    td {
+        border: 1px solid black;
+    }
+
+    th,
+    td {
+        padding: 5px;
+        text-align: left;
     }
 </style>
 
@@ -123,18 +154,26 @@
         let listPictures = document.getElementById('listPictures')
 
         pictures.forEach(element => {
-            let div = document.createElement('div')
-            div.id = element.id
-            listPictures.appendChild(div)
+            let tr = document.createElement('tr')
+            listPictures.appendChild(tr)
+
+            let tdName = document.createElement('td')
+            let tdDateStart = document.createElement('td')
+            let tdDateFinish = document.createElement('td')
+            let tdButton = document.createElement('td')
+            tr.appendChild(tdName)
+            tr.appendChild(tdDateStart)
+            tr.appendChild(tdDateFinish)
+            tr.appendChild(tdButton)
 
             let labelName = document.createElement('label')
             labelName.innerHTML = element.name
 
             let labelDateStart = document.createElement('label')
-            labelDateStart.innerHTML = element.date_start
+            labelDateStart.innerHTML = new Date(element.date_start).toLocaleString()
 
             let labelDateFinish = document.createElement('label')
-            labelDateFinish.innerHTML = element.date_finish
+            labelDateFinish.innerHTML = new Date(element.date_finish).toLocaleString()
 
             let buttonDel = document.createElement('input')
             buttonDel.setAttribute('type', 'button')
@@ -142,25 +181,32 @@
             buttonDel.name = element.id
             buttonDel.onclick = deleteElement
 
-            div.appendChild(labelName)
-            div.appendChild(labelDateStart)
-            div.appendChild(labelDateFinish)
-            div.appendChild(buttonDel)
+            tdName.appendChild(labelName)
+            tdDateStart.appendChild(labelDateStart)
+            tdDateFinish.appendChild(labelDateFinish)
+            tdButton.appendChild(buttonDel)
         })
     }
 
     function deleteElement() {
-        let xhrDel = new XMLHttpRequest()
+        if (
+            confirm(
+                'Вы действительно хотите удалить изображение из очереди показа? Его можно будет добавить заново позднее'
+            )
+        ) {
+            let xhrDel = new XMLHttpRequest()
 
-        xhrDel.open('DELETE', `https://unidb.ru:8446/api/pictures/${this.name}`, true)
+            xhrDel.open('DELETE', `https://unidb.ru:8446/api/pictures/${this.name}`, true)
 
-        xhrDel.onreadystatechange = () => {
-            if ((xhrDel.readyState = 4 && xhrDel.status == 200)) {
-                this.parentNode.remove()
+            xhrDel.onreadystatechange = () => {
+                if ((xhrDel.readyState = 4 && xhrDel.status == 200)) {
+                    this.parentNode.parentNode.remove()
+                }
             }
-        }
 
-        xhrDel.send()
+            xhrDel.send()
+        } else {
+        }
     }
 
     //TODO: удаление файлов
