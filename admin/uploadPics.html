@@ -23,6 +23,7 @@
         <input type="file" name="afile" id="afile" accept="image/*" /> <br />
         <label>Состояние: </label> <progress id="progress" value="0" max="100"> </progress>
         <label id="isEnd"></label>
+        <div id="listPictures"></div>
     </body>
 </html>
 
@@ -105,7 +106,7 @@
 
     function getAllFiles() {
         var xhrGet = new XMLHttpRequest()
-        xhrGet.open('GET', 'https://unidb.ru:8446/api/getVideos', true)
+        xhrGet.open('GET', 'https://unidb.ru:8446/api/pictures', true)
 
         xhrGet.onreadystatechange = () => {
             if (xhrGet.readyState == 4 && xhrGet.status == 200) {
@@ -118,6 +119,48 @@
 
     function showFiles(response) {
         var pictures = JSON.parse(response)
+
+        let listPictures = document.getElementById('listPictures')
+
+        pictures.forEach(element => {
+            let div = document.createElement('div')
+            div.id = element.id
+            listPictures.appendChild(div)
+
+            let labelName = document.createElement('label')
+            labelName.innerHTML = element.name
+
+            let labelDateStart = document.createElement('label')
+            labelDateStart.innerHTML = element.date_start
+
+            let labelDateFinish = document.createElement('label')
+            labelDateFinish.innerHTML = element.date_finish
+
+            let buttonDel = document.createElement('input')
+            buttonDel.setAttribute('type', 'button')
+            buttonDel.value = 'Удалить'
+            buttonDel.name = element.id
+            buttonDel.onclick = deleteElement
+
+            div.appendChild(labelName)
+            div.appendChild(labelDateStart)
+            div.appendChild(labelDateFinish)
+            div.appendChild(buttonDel)
+        })
+    }
+
+    function deleteElement() {
+        let xhrDel = new XMLHttpRequest()
+
+        xhrDel.open('DELETE', `https://unidb.ru:8446/api/pictures/${this.name}`, true)
+
+        xhrDel.onreadystatechange = () => {
+            if ((xhrDel.readyState = 4 && xhrDel.status == 200)) {
+                this.parentNode.remove()
+            }
+        }
+
+        xhrDel.send()
     }
 
     //TODO: удаление файлов

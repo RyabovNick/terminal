@@ -64,7 +64,23 @@ app.get('/api/pictures', function(req, res, next) {
 
         console.log(req.body)
 
-        connection.query('Select * from pictures', function(error, result) {
+        connection.query('Select * from pictures order by id desc', function(error, result) {
+            if (error) throw error
+            console.log(result)
+            res.send(result)
+        })
+
+        connection.release()
+    })
+})
+
+app.get('/api/videos', function(req, res, next) {
+    pool.getConnection(function(err, connection) {
+        if (err) throw err
+
+        console.log(req.body)
+
+        connection.query('Select * from videos order by id desc', function(error, result) {
             if (error) throw error
             console.log(result)
             res.send(result)
