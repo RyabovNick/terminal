@@ -23,7 +23,15 @@
         <input type="file" name="afile" id="afile" accept="image/*" /> <br />
         <label>Состояние: </label> <progress id="progress" value="0" max="100"> </progress>
         <label id="isEnd"></label>
-        <!-- <div id="listPictures"></div> -->
+
+        <p>
+            В таблице ниже представлены все изображения, находящие в показе, или ожидающие показа в
+            будущем.
+        </p>
+        <p>
+            Для изменения времени показа удалите ненужный файл и загрузите его снова, выбрав
+            необходимое время показа
+        </p>
 
         <table id="listPictures">
             <tr>
@@ -208,6 +216,4 @@
         } else {
         }
     }
-
-    //TODO: удаление файлов
 </script>

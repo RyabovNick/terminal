@@ -14,6 +14,15 @@
             html {
                 overflow: hidden;
             }
+
+            img {
+                position: absolute;
+                margin: auto;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+            }
         </style>
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -60,6 +69,7 @@
     }
 
     function nextPictures(id) {
+        //TODO: переворачивает изображения по ширине
         var len = media.length
 
         console.log('showImage: ' + Date(Date.now()))
@@ -73,7 +83,7 @@
         img.src = `https://unidb.ru/${entry.link}`
         img.id = 'img'
         img.setAttribute('width', '100%')
-        img.setAttribute('height', '100%')
+        //img.setAttribute('height', '100%')
         body.appendChild(img)
 
         //ждём заданное количество времени
@@ -105,7 +115,16 @@
                 })
 
                 console.log(links)
-                nextVideo(0)
+                //Проверяем, если нет ни изображений, ни видео - ждём 30 секунд
+                //и пробуем снова
+                if (media.length > 0) {
+                    nextVideo(0)
+                } else {
+                    setTimeout(function() {
+                        console.log('timeout')
+                        getMedia()
+                    }, 30 * 1000)
+                }
             }
         }
         //local

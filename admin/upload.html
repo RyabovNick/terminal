@@ -6,18 +6,60 @@
         <title>FIles uploader</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
     </head>
-    <body>
+    <body onload="getAllFiles()">
         <h1>Загрузка видео</h1>
-        <p>Допустимый формат: mp4. Загрузка начнётся автоматически, после выбора файла</p>
+        <p>Допустимый формат: mp4.</p>
+        <p>Максимальный размер - 500 мб (обсуждаемо)</p>
+        <p>Загрузка начнётся автоматически, после выбора файла</p>
+        <br />
         <input type="file" name="afile" id="afile" accept="video/mp4" /> <br />
         <label>Состояние: </label> <progress id="progress" value="0" max="100"> </progress>
-        <label id="isEnd"></label>
+        <label id="isEnd"></label> <br />
+        <p>
+            В таблице ниже представлены все видео, находящиеся в очереди показа. Они будут
+            воспроизведены, если в очереди не присутствуют никакие изображения.
+        </p>
+        <p>Для изменения видео удалите ненужное и загрузите заново.</p>
+
+        <table id="listVideos">
+            <tr>
+                <th>Имя файла</th>
+                <th></th>
+            </tr>
+        </table>
     </body>
 </html>
 
 <style>
     #afile {
         margin-bottom: 20px;
+    }
+
+    p {
+        margin-bottom: 2px;
+        margin-top: 2px;
+    }
+
+    #listVideos {
+        margin-top: 35px;
+        width: 100%;
+        max-width: 450px;
+    }
+
+    table {
+        border-collapse: collapse;
+    }
+
+    table,
+    th,
+    td {
+        border: 1px solid black;
+    }
+
+    th,
+    td {
+        padding: 5px;
+        text-align: left;
     }
 </style>
 
@@ -48,5 +90,65 @@
         false
     )
 
-    //TODO: удаление файлов
+    function getAllFiles() {
+        var xhrGet = new XMLHttpRequest()
+        xhrGet.open('GET', 'https://unidb.ru:8446/api/videos', true)
+
+        xhrGet.onreadystatechange = () => {
+            if (xhrGet.readyState == 4 && xhrGet.status == 200) {
+                showFiles(xhrGet.responseText)
+            }
+        }
+
+        xhrGet.send()
+    }
+
+    function showFiles(response) {
+        var pictures = JSON.parse(response)
+
+        let listVideos = document.getElementById('listVideos')
+
+        pictures.forEach(element => {
+            let tr = document.createElement('tr')
+            listVideos.appendChild(tr)
+
+            let tdName = document.createElement('td')
+            let tdButton = document.createElement('td')
+            tr.appendChild(tdName)
+            tr.appendChild(tdButton)
+
+            let labelName = document.createElement('label')
+            labelName.innerHTML = element.name
+
+            let buttonDel = document.createElement('input')
+            buttonDel.setAttribute('type', 'button')
+            buttonDel.value = 'Удалить'
+            buttonDel.name = element.id
+            buttonDel.onclick = deleteElement
+
+            tdName.appendChild(labelName)
+            tdButton.appendChild(buttonDel)
+        })
+    }
+
+    function deleteElement() {
+        if (
+            confirm(
+                'Вы действительно хотите удалить видео из очереди показа? Его можно будет добавить заново позднее'
+            )
+        ) {
+            let xhrDel = new XMLHttpRequest()
+
+            xhrDel.open('DELETE', `https://unidb.ru:8446/api/videos/${this.name}`, true)
+
+            xhrDel.onreadystatechange = () => {
+                if ((xhrDel.readyState = 4 && xhrDel.status == 200)) {
+                    this.parentNode.parentNode.remove()
+                }
+            }
+
+            xhrDel.send()
+        } else {
+        }
+    }
 </script>

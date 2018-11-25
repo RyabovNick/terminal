@@ -121,6 +121,7 @@ app.post('/api/upload_videos', function(req, res, next) {
         allFiles = []
 
     form.uploadDir = '../html/files'
+    form.maxFileSize = 500 * 1024 * 1024
     //form.uploadDir = './files'
     form.keepExtensions = true
     form.multiples = true
