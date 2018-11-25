@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>FIles uploader</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+    </head>
+    <body onload="setDate()">
+        <h1>Загрузка изображений</h1>
+        <p>Допустимый формат: изображения.</p>
+        <p>Загрузка начнётся автоматически, после выбора файла</p>
+        <p>
+            Показ изображений начнётся автоматически примерно в заданное время, в зависимости от
+            очереди показа в этот момент.
+        </p>
+        <label>Время начала показа: </label>
+        <input class="input1" type="datetime-local" name="date_start" /><br />
+        <label>Время окончания показа: </label>
+        <input class="input2" type="datetime-local" name="date_finish" /><br />
+        <label>Секунд показа:</label>
+        <input class="input3" type="number" name="amount_time" value="15" min="5" max="120" /><br />
+        <input type="file" name="afile" id="afile" accept="image/*" /> <br />
+        <label>Состояние: </label> <progress id="progress" value="0" max="100"> </progress>
+        <label id="isEnd"></label>
+    </body>
+</html>
+
+<style>
+    #afile {
+        margin-bottom: 20px;
+        width: 400px;
+    }
+
+    .input1 {
+        margin-left: 25px;
+        margin-bottom: 10px;
+        margin-top: 20px;
+    }
+
+    .input2 {
+        margin-bottom: 10px;
+    }
+
+    .input3 {
+        margin-left: 68px;
+        margin-bottom: 30px;
+    }
+
+    p {
+        margin-bottom: 2px;
+        margin-top: 2px;
+    }
+</style>
+
+<script>
+    document.querySelector('#afile').addEventListener(
+        'change',
+        function(e) {
+            document.getElementById('progress').value = 0
+            var file = this.files[0]
+            var fd = new FormData()
+            fd.append('upload', file)
+            fd.append('date_start', document.getElementsByName('date_start')[0].value)
+            fd.append('date_finish', document.getElementsByName('date_finish')[0].value)
+            fd.append('amount_time', document.getElementsByName('amount_time')[0].value)
+            // These extra params aren't necessary but show that you can include other data.
+            var xhr = new XMLHttpRequest()
+            xhr.open('POST', 'https://unidb.ru:8446/api/upload_pictures', true)
+
+            xhr.upload.onprogress = function(e) {
+                let progress = document.getElementById('progress')
+                if (e.lengthComputable) {
+                    var percentComplete = (e.loaded / e.total) * 100
+                    progress.value = percentComplete
+                    console.log(percentComplete + '% uploaded')
+                    if (percentComplete == 100) {
+                        document.getElementById('isEnd').innerHTML = 'Ok!'
+                    }
+                }
+            }
+            xhr.send(fd)
+        },
+        false
+    )
+
+    function setDate() {
+        let date = new Date(Date.now())
+        document.getElementsByName('date_start')[0].value = getDate(date)
+        date.setDate(date.getDate() + 30)
+        document.getElementsByName('date_finish')[0].value = getDate(date)
+    }
+
+    function getDate(dateNow) {
+        let dd = dateNow.getDate()
+        let MM = dateNow.getMonth() + 1
+        let yyyy = dateNow.getFullYear()
+        let HH = dateNow.getHours()
+        let mm = (dateNow.getMinutes() < 10 ? '0' : '') + dateNow.getMinutes()
+
+        return `${yyyy}-${MM}-${dd}T${HH}:${mm}`
+        //return `${dd}.${MM}.${yyyy} ${HH}:${mm}`
+    }
+
+    //TODO: удаление файлов
+</script>

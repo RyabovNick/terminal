@@ -7,16 +7,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
     </head>
     <body>
-        <!--
-            <form
-                id="uploadForm"
-                action="https://localhost:8446/api/upload_videos"
-                enctype="multipart/form-data"
-                method="post"
-            >
-                <input type="file" name="upload" /> <input type="submit" value="Upload" />
-            </form>
-        -->
         <h1>Загрузка видео</h1>
         <p>Допустимый формат: mp4. Загрузка начнётся автоматически, после выбора файла</p>
         <input type="file" name="afile" id="afile" accept="video/mp4" /> <br />
@@ -32,19 +22,6 @@
 </style>
 
 <script>
-    // var form = document.getElementById('uploadForm')
-    // form.onsubmit = () => {
-    //     var formData = new FormData(form)
-
-    //     formData.append('upload', upload)
-
-    //     var xhr = new XMLHttpRequest()
-    //     xhr.open('POST', form.getAttribute('action'), true)
-    //     xhr.send(formData)
-
-    //     return false
-    // }
-
     document.querySelector('#afile').addEventListener(
         'change',
         function(e) {
@@ -66,14 +43,10 @@
                     }
                 }
             }
-            // xhr.onload = function() {
-            //     if (this.status == 200) {
-            //         var resp = JSON.parse(this.response)
-            //         console.log('Server got:', resp)
-            //     }
-            // }
             xhr.send(fd)
         },
         false
     )
+
+    //TODO: удаление файлов
 </script>
