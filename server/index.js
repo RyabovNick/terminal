@@ -94,23 +94,6 @@ app.get('/api/videos', function(req, res, next) {
 })
 
 /**
- * upload html page
- */
-app.get('/upload_form', function(req, res, next) {
-    res.writeHead(200, { 'content-type': 'text/html' })
-    res.end(
-        '<form action="/api/upload_pictures" enctype="multipart/form-data" method="post">' +
-            'Name: <input type="text" name="name"><br>' +
-            'DateFrom: <input type="datetime" name="date_start" value="2018-11-23 17:01:24"><br>' +
-            'DateTo: <input type="datetime" name="date_finish" value="2018-11-25 17:01:24"><br>' +
-            'DateTo: <input type="number" name="amount_time" value="2018-11-25 17:01:24"><br>' +
-            '<input type="file" name="upload"><br>' +
-            '<input type="submit" value="Upload">' +
-            '</form>'
-    )
-})
-
-/**
  * Upload files API
  */
 app.post('/api/upload_videos', function(req, res, next) {

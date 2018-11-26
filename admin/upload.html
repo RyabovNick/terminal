@@ -72,7 +72,7 @@
             fd.append('upload', file)
             // These extra params aren't necessary but show that you can include other data.
             var xhr = new XMLHttpRequest()
-            xhr.open('POST', 'http://localhost:8446/api/upload_videos', true)
+            xhr.open('POST', 'http://10.200.0.35:8446/api/upload_videos', true)
 
             xhr.upload.onprogress = function(e) {
                 let progress = document.getElementById('progress')
@@ -92,7 +92,7 @@
 
     function getAllFiles() {
         var xhrGet = new XMLHttpRequest()
-        xhrGet.open('GET', 'http://localhost:8446/api/videos', true)
+        xhrGet.open('GET', 'http://10.200.0.35:8446/api/videos', true)
 
         xhrGet.onreadystatechange = () => {
             if (xhrGet.readyState == 4 && xhrGet.status == 200) {
@@ -139,7 +139,7 @@
         ) {
             let xhrDel = new XMLHttpRequest()
 
-            xhrDel.open('DELETE', `http://localhost:8446/api/videos/${this.name}`, true)
+            xhrDel.open('DELETE', `http://10.200.0.35:8446/api/videos/${this.name}`, true)
 
             xhrDel.onreadystatechange = () => {
                 if ((xhrDel.readyState = 4 && xhrDel.status == 200)) {
