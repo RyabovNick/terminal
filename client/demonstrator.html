@@ -66,7 +66,7 @@
         }
         //local
         //xhr.open('GET', 'http://localhost:3000/api/getFiles', true)
-        xhr.open('GET', 'https://unidb.ru:8446/api/getPictures', true)
+        xhr.open('GET', 'http://localhost:8446/api/getPictures', true)
         xhr.send()
     }
 
@@ -76,7 +76,7 @@
         var body = document.getElementsByTagName('body')[0]
 
         var img = document.createElement('img')
-        img.src = `https://unidb.ru/${entry.link}`
+        img.src = `http://10.200.0.35:8445/${entry.link}`
         img.id = 'img'
         img.setAttribute('width', '100%')
         //img.setAttribute('height', '100%')
@@ -126,7 +126,7 @@
         }
         //local
         //xhr.open('GET', 'http://localhost:3000/api/getFiles', true)
-        xhr.open('GET', 'https://unidb.ru:8446/api/getVideos', true)
+        xhr.open('GET', 'http://localhost:8446/api/getVideos', true)
         xhr.send()
     }
 
@@ -152,7 +152,7 @@
 
         let newSource = document.createElement('source')
         newSource.setAttribute('id', 'source')
-        newSource.setAttribute('src', `https://unidb.ru/${links[id]}`)
+        newSource.setAttribute('src', `http://10.200.0.35:8445/${links[id]}`)
         newSource.setAttribute('type', 'video/mp4')
 
         newVideo.appendChild(newSource)

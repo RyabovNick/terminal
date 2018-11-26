@@ -112,7 +112,7 @@
             fd.append('amount_time', document.getElementsByName('amount_time')[0].value)
             // These extra params aren't necessary but show that you can include other data.
             var xhr = new XMLHttpRequest()
-            xhr.open('POST', 'https://unidb.ru:8446/api/upload_pictures', true)
+            xhr.open('POST', 'http://localhost:8446/api/upload_pictures', true)
 
             xhr.upload.onprogress = function(e) {
                 let progress = document.getElementById('progress')
@@ -151,7 +151,7 @@
 
     function getAllFiles() {
         var xhrGet = new XMLHttpRequest()
-        xhrGet.open('GET', 'https://unidb.ru:8446/api/pictures', true)
+        xhrGet.open('GET', 'http://localhost:8446/api/pictures', true)
 
         xhrGet.onreadystatechange = () => {
             if (xhrGet.readyState == 4 && xhrGet.status == 200) {
@@ -210,7 +210,7 @@
         ) {
             let xhrDel = new XMLHttpRequest()
 
-            xhrDel.open('DELETE', `https://unidb.ru:8446/api/pictures/${this.name}`, true)
+            xhrDel.open('DELETE', `http://localhost:8446/api/pictures/${this.name}`, true)
 
             xhrDel.onreadystatechange = () => {
                 if ((xhrDel.readyState = 4 && xhrDel.status == 200)) {

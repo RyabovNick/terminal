@@ -4,13 +4,13 @@ var express = require('express'),
     formidable = require('formidable'),
     //for https and cors
     cors = require('cors'),
-    https = require('https'),
-    fs = require('fs')
+    http = require('http'),
+    //fs = require('fs')
 // get .key and .cert to https
-var sslOptions = {
-    key: fs.readFileSync('key.key'),
-    cert: fs.readFileSync('cert.crt')
-}
+// var sslOptions = {
+//     key: fs.readFileSync('key.key'),
+//     cert: fs.readFileSync('cert.crt')
+// }
 
 var app = express()
 
@@ -256,7 +256,7 @@ app.delete('/api/:table/:id', function(req, res, next) {
 })
 
 // change server = app..... to this if https needed
-https.createServer(sslOptions, app).listen(8446, function() {
+http.createServer(app).listen(8446, function() {
     console.log('Listening on port 8446')
 })
 // finally, let's start our server...
