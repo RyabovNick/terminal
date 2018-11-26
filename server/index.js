@@ -4,8 +4,8 @@ var express = require('express'),
     formidable = require('formidable'),
     //for https and cors
     cors = require('cors'),
-    http = require('http'),
-    //fs = require('fs')
+    http = require('http')
+//fs = require('fs')
 // get .key and .cert to https
 // var sslOptions = {
 //     key: fs.readFileSync('key.key'),
@@ -157,7 +157,7 @@ app.post('/api/upload_videos', function(req, res, next) {
                     //в ссылке лишнее (../html/) поэтому substr(8)
                     con.query(
                         'Insert into `videos` (name,link) values (?,?)',
-                        [el.file.name, el.file.path.substr(8)],
+                        [el.file.name, el.file.path.substr(31)],
                         function(error, result) {
                             if (error) return res.status(406).send(error)
                             console.log(result)
@@ -216,7 +216,7 @@ app.post('/api/upload_pictures', function(req, res, next) {
                         'Insert into `pictures` (name,link,date_start,date_finish,amount_time) values (?,?,?,?,?)',
                         [
                             el.file.name,
-                            el.file.path.substr(8),
+                            el.file.path.substr(31),
                             fields.date_start,
                             fields.date_finish,
                             fields.amount_time
