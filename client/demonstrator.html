@@ -58,6 +58,7 @@
                     getVideos()
                 }
             } else if (this.readyState == 4 && this.status == 0) {
+                setDefaultImg()
                 setTimeout(function() {
                     console.log('try connect again')
                     getMedia()
@@ -113,11 +114,13 @@
                 if (media.length > 0) {
                     nextVideo(0)
                 } else {
+                    setDefaultImg()
                     setTimeout(function() {
                         getMedia()
                     }, 30 * 1000)
                 }
             } else if (this.readyState == 4 && this.status == 0) {
+                setDefaultImg()
                 setTimeout(function() {
                     console.log('try connect again')
                     getMedia()
@@ -166,5 +169,16 @@
         //настройках хрома ковыряться
         //вроде как muted решает проблему, но надо проследить
         //newVideo.play()
+    }
+
+    function setDefaultImg() {
+        var body = document.getElementsByTagName('body')[0]
+
+        var img = document.createElement('img')
+        img.src = `http://10.200.0.35:8445/default.jpg`
+        img.id = 'img'
+        img.setAttribute('width', '100%')
+        //img.setAttribute('height', '100%')
+        body.appendChild(img)
     }
 </script>
